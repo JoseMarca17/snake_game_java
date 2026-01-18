@@ -8,7 +8,7 @@ public class GamePanel extends JPanel implements ActionListener {
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
     static final int GAME_UNITS = (SCREEN_WIDTH + SCREEN_HEIGHT) / UNIT_SIZE;
-    static final int DELAY = 75;
+    static final int DELAY = 100;
 
     Random random = new Random();
 
@@ -23,6 +23,9 @@ public class GamePanel extends JPanel implements ActionListener {
     char direction = 'R';
     boolean running = false;
     Timer timer;
+
+    // Check panel
+    boolean gameStarted = false;
 
     GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -53,7 +56,9 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g) {
-        if (running) {
+        if (!gameStarted) {
+            drawStartScreen(g);
+        } else if (running) {
             for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
                 g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
                 g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
@@ -70,6 +75,11 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
                 g.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
             }
+
+            // Show points while playing
+            g.setColor(Color.white);
+            g.setFont(new Font("Ink Free", Font.BOLD, 20));
+            g.drawString("Puntaje: " + applesEaten, 10, 25);
         } else {
             gameOver(g);
         }
@@ -126,17 +136,34 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.BOLD, 40));
         FontMetrics metrics1 = getFontMetrics(g.getFont());
-        g.drawString("Puntaje: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Puntaje: " + applesEaten)) / 2, g.getFont().getSize());
+        g.drawString("Puntaje: " + applesEaten, (SCREEN_WIDTH - metrics1.stringWidth("Puntaje: " + applesEaten))
+                / 2, g.getFont().getSize());
 
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.BOLD, 75));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
         g.drawString("Game Over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
+
+        // Restart Game
+        g.setFont(new Font("Ink Free", Font.BOLD, 30));
+        g.setColor(Color.white);
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("Presiona R para reiniciar", (SCREEN_WIDTH - metrics.stringWidth("Presiona R para reiniciar")) / 2,
+                SCREEN_HEIGHT / 2 + 150);
     }
 
     public class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
+            if(!gameStarted){
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    gameStarted = true;
+                }
+            }
+
+            if(!running && e.getKeyCode() == KeyEvent.VK_R){
+                restartGame();
+            }
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT -> {
                     if (direction != 'R') direction = 'L';
@@ -152,5 +179,31 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    // Start Screen
+    public void drawStartScreen(Graphics g){
+        g.setColor(Color.green);
+        g.setFont(new Font("Ink Free", Font.BOLD, 75));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("SNAKE GAME", (SCREEN_WIDTH - metrics.stringWidth("SNAKE GAME")) / 2, SCREEN_HEIGHT / 2);
+
+        g.setFont(new Font("Ink Free", Font.BOLD, 30));
+        g.setColor(Color.white);
+        FontMetrics metricsStart = getFontMetrics(g.getFont());
+        g.drawString("Presiona ESPACIO para iniciar", (SCREEN_WIDTH - metricsStart.stringWidth("Presiona ESPACIO para iniciar"))
+                / 2, SCREEN_HEIGHT / 2 + 100);
+    }
+
+    // Restrart game method
+    public void restartGame(){
+        bodyParts = 6;
+        applesEaten = 0;
+        direction = 'R';
+        for(int i = 0; i < bodyParts; i++) {
+            x[i] = 0;
+            y[i] = 0;
+        }
+        startGame();
     }
 }
