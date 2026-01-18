@@ -148,8 +148,8 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         g.setColor(Color.white);
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("Presiona R para reiniciar", (SCREEN_WIDTH - metrics.stringWidth("Presiona R para reiniciar")) / 2,
-                SCREEN_HEIGHT / 2 + 150);
+        g.drawString("Presiona R para reiniciar", (SCREEN_WIDTH -
+                        metrics.stringWidth("Presiona R para reiniciar")) / 2,SCREEN_HEIGHT / 2 + 150);
     }
 
     public class MyKeyAdapter extends KeyAdapter {
@@ -191,8 +191,8 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setFont(new Font("Ink Free", Font.BOLD, 30));
         g.setColor(Color.white);
         FontMetrics metricsStart = getFontMetrics(g.getFont());
-        g.drawString("Presiona ESPACIO para iniciar", (SCREEN_WIDTH - metricsStart.stringWidth("Presiona ESPACIO para iniciar"))
-                / 2, SCREEN_HEIGHT / 2 + 100);
+        g.drawString("Presiona ESPACIO para iniciar", (SCREEN_WIDTH -
+                metricsStart.stringWidth("Presiona ESPACIO para iniciar")) / 2, SCREEN_HEIGHT / 2 + 100);
     }
 
     // Restrart game method
